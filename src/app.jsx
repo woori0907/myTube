@@ -1,22 +1,28 @@
-import './app.css';
+import './app.module.css';
 
 import React, { useEffect, useState } from 'react';
+import Navbar from './components/navbar/navbar';
 import Videos from './components/videos/videos';
 
-const App = (props) => {
+const App = ({youtube}) => {
  const [videos, setVideos] = useState([]);
  useEffect(()=>{
-  const requestOptions = {
-    method: 'GET',
-    redirect: 'follow',
-  };
-  
-  fetch("https://youtube.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&maxResults=25&pageToken=CAUQAA&key=AIzaSyC9UqbYoxdLvqoKBSqbgI-LkNevl0qr56E", requestOptions)
-  .then(response => response.json())
-  .then(result => setVideos(result.items))
-  .catch(error => console.log('error', error));
+   youtube
+   .mostPopular()
+   .then(videos => setVideos(videos));
  }, []);
- return <Videos videos={videos}/>;
+
+ const searchVideos = (query) => {
+  youtube
+  .search(query)
+  .then(videos => setVideos(videos));
+ }
+ return (
+   <>
+    <Navbar onSearch={searchVideos}/>
+    <Videos videos={videos}/>
+  </>
+ );
 };
 
 export default App;
