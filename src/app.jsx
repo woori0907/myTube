@@ -1,6 +1,6 @@
 import './app.module.css';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Navbar from './components/navbar/navbar';
 import Videos from './components/videos/videos';
 import VideoDetail from './components/detail/video_detail';
@@ -13,16 +13,16 @@ const App = ({youtube}) => {
    youtube
    .mostPopular()
    .then(videos => setVideos(videos));
- }, []);
+ }, [youtube]);
 
- const searchVideos = (query) => {
+ const searchVideos = useCallback((query) => {
   youtube
   .search(query)
   .then(videos => {
     setVideos(videos);
     selectVideo(null);
   });
- }
+ }, [youtube]);
 
  const selectVideo = (video) => {
    setSelectedVideo(video);
